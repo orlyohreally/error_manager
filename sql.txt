@@ -1,0 +1,122 @@
+CREATE TABLE IF NOT EXISTS `error_manager`.`Action` (
+  `idAction` INT NOT NULL AUTO_INCREMENT,
+  `Type` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`idAction`),
+  UNIQUE INDEX `idAction_UNIQUE` (`idAction` ASC),
+  UNIQUE INDEX `Type_UNIQUE` (`Type` ASC))
+ENGINE = InnoDB
+
+
+CREATE TABLE IF NOT EXISTS `error_manager`.`Activity` (
+  `idActivity` INT NULL AUTO_INCREMENT,
+  `Comment` VARCHAR(100) NULL,
+  `Date` DATE NOT NULL,
+  `User_idUser` INT NOT NULL,
+  `Error_idError` INT NOT NULL,
+  `Action_idAction` INT NOT NULL DEFAULT 1,
+  PRIMARY KEY (`idActivity`),
+  INDEX `fk_Activity_User1_idx` (`User_idUser` ASC),
+  INDEX `fk_Activity_Error1_idx` (`Error_idError` ASC),
+  INDEX `fk_Activity_Action1_idx` (`Action_idAction` ASC),
+  CONSTRAINT `fk_Activity_User1`
+    FOREIGN KEY (`User_idUser`)
+    REFERENCES `error_manager`.`User` (`idUser`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Activity_Error1`
+    FOREIGN KEY (`Error_idError`)
+    REFERENCES `error_manager`.`Error` (`idError`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Activity_Action1`
+    FOREIGN KEY (`Action_idAction`)
+    REFERENCES `error_manager`.`Action` (`idAction`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+
+CREATE TABLE IF NOT EXISTS `error_manager`.`Error` (
+  `idError` INT NOT NULL AUTO_INCREMENT,
+  `Date` DATE NOT NULL,
+  `Short_description` VARCHAR(45) NOT NULL,
+  `Long_description` LONGTEXT NOT NULL,
+  `User_idUser` INT NOT NULL,
+  `Urgency_idUrgency` INT NOT NULL,
+  `Importance_idImportance` INT NOT NULL,
+  `Status_idStatus` INT NOT NULL DEFAULT 1,
+  PRIMARY KEY (`idError`),
+  INDEX `fk_Error_User_idx` (`User_idUser` ASC),
+  INDEX `fk_Error_Urgency1_idx` (`Urgency_idUrgency` ASC),
+  INDEX `fk_Error_Importance1_idx` (`Importance_idImportance` ASC),
+  INDEX `fk_Error_Status1_idx` (`Status_idStatus` ASC),
+  CONSTRAINT `fk_Error_User`
+    FOREIGN KEY (`User_idUser`)
+    REFERENCES `error_manager`.`User` (`idUser`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Error_Urgency1`
+    FOREIGN KEY (`Urgency_idUrgency`)
+    REFERENCES `error_manager`.`Urgency` (`idUrgency`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Error_Importance1`
+    FOREIGN KEY (`Importance_idImportance`)
+    REFERENCES `error_manager`.`Importance` (`idImportance`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Error_Status1`
+    FOREIGN KEY (`Status_idStatus`)
+    REFERENCES `error_manager`.`Status` (`idStatus`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+
+CREATE TABLE IF NOT EXISTS `error_manager`.`Importance` (
+  `idImportance` INT NULL AUTO_INCREMENT,
+  `Type` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`idImportance`),
+  UNIQUE INDEX `Type_UNIQUE` (`Type` ASC))
+ENGINE = InnoDB
+
+CREATE TABLE IF NOT EXISTS `error_manager`.`Status` (
+  `idStatus` INT NOT NULL AUTO_INCREMENT,
+  `Type` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`idStatus`),
+  UNIQUE INDEX `idStatus_UNIQUE` (`idStatus` ASC))
+ENGINE = InnoDB
+
+CREATE TABLE IF NOT EXISTS `error_manager`.`Status_has_Status` (
+  `Status_idStatus` INT NOT NULL,
+  `Status_idStatus1` INT NOT NULL,
+  PRIMARY KEY (`Status_idStatus`, `Status_idStatus1`),
+  INDEX `fk_Status_has_Status_Status2_idx` (`Status_idStatus1` ASC),
+  INDEX `fk_Status_has_Status_Status1_idx` (`Status_idStatus` ASC),
+  CONSTRAINT `fk_Status_has_Status_Status1`
+    FOREIGN KEY (`Status_idStatus`)
+    REFERENCES `error_manager`.`Status` (`idStatus`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Status_has_Status_Status2`
+    FOREIGN KEY (`Status_idStatus1`)
+    REFERENCES `error_manager`.`Status` (`idStatus`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+
+CREATE TABLE IF NOT EXISTS `error_manager`.`Urgency` (
+  `idUrgency` INT NOT NULL AUTO_INCREMENT,
+  `Type` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`idUrgency`),
+  UNIQUE INDEX `Type_UNIQUE` (`Type` ASC))
+ENGINE = InnoDB
+
+CREATE TABLE IF NOT EXISTS `error_manager`.`User` (
+  `idUser` INT NOT NULL AUTO_INCREMENT,
+  `FirstName` VARCHAR(45) NOT NULL,
+  `LastName` VARCHAR(45) NOT NULL,
+  `Password` VARCHAR(45) NOT NULL,
+  `Role` VARCHAR(45) NOT NULL DEFAULT 'user',
+  PRIMARY KEY (`idUser`))
+ENGINE = InnoDB
+
+
